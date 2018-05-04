@@ -7,9 +7,74 @@
 	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
 	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+	
+	<aop:aspectj-autoproxy />
 
 	<!-- validator, conversionService, messageConverter를 자동으로 등록 -->
-	<mvc:annotation-driven />
+	<mvc:annotation-driven>
+		<!-- Message Converter -->
+		<mvc:message-converters>
+			<bean class="org.springframework.http.converter.StringHttpMessageConverter">
+			    <property name="supportedMediaTypes">
+			        <list>
+			             <value>text/html; charset=UTF-8</value>
+			        </list>
+			    </property>
+			</bean>
+			<bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+			   <property name="supportedMediaTypes">
+			       <list>
+			            <value>application/json; charset=UTF-8</value>
+			        </list>
+			   </property>
+			</bean>
+		</mvc:message-converters>
+		
+		<!-- argument resolver -->
+		<mvc:argument-resolvers>
+			<bean class="com.cafe24.lms.security.AuthUserHandlerMethodArgumentResolver" />
+		</mvc:argument-resolvers>
+	</mvc:annotation-driven>
+
+	<!-- user가 로그인할 때 이용되는 인터셉터 -->
+	<mvc:interceptors>
+        <mvc:interceptor>
+        	<mvc:mapping path="/user/auth" /> 
+    	<bean class="com.cafe24.lms.security.AuthLoginInterceptor" />
+        </mvc:interceptor><!-- 
+        
+        <bean id="webContentInterceptor" class="org.springframework.web.servlet.mvc.WebContentInterceptor">
+	        <property name="cacheSeconds" value="0" />
+	        <property name="useExpiresHeader" value="true" />
+	        <property name="useCacheControlHeader" value="true" />
+	        <property name="useCacheControlNoStore" value="true" />
+	        <property name="cacheMappings">
+               <props> 
+               아래 경로에만 뒤로가기 제한시킴.
+                      <prop key="/index/**">86400</prop>
+               </props>
+               </property>
+		</bean> -->
+    </mvc:interceptors>
+    
+    <!-- user가 로그 아웃 할 때 이용되는 인터셉터 -->
+    <mvc:interceptors>
+        <mvc:interceptor>
+        	<mvc:mapping path="/user/member_logout" /> 
+    	<bean class="com.cafe24.lms.security.AuthLogoutInterceptor" />
+        </mvc:interceptor>
+    </mvc:interceptors>
+    
+    <!-- 모든 페이지에 접속할 때 이용되는 인터셉터 -->
+    <mvc:interceptors>
+        <mvc:interceptor>
+        	<mvc:mapping path="/**" />
+        	<mvc:exclude-mapping path="/user/logout"/>
+        	<mvc:exclude-mapping path="/user/auth"/>
+        	<mvc:exclude-mapping path="/assets/**"/> 
+    		<bean class="com.cafe24.lms.security.AuthInterceptor" />
+        </mvc:interceptor>
+    </mvc:interceptors>
 
 	<!-- 서블릿 컨테이너의 디폴트 서블릿 위임 핸들러 -->
 	<mvc:default-servlet-handler />
@@ -28,4 +93,12 @@
 	<context:annotation-config />
 	<context:component-scan base-package="com.cafe24.lms.controller" />
 
+	<!-- MessageSource -->
+	<bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+	   <property name="basenames">
+	      <list>
+		<value>messages/messages_ko</value>
+	      </list>
+	   </property>
+	</bean>
 </beans>

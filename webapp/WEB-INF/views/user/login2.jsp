@@ -33,7 +33,7 @@
 		<c:import url="/WEB-INF/views/includes/header_jstl.jsp"></c:import>
 		<div id="content">
 			<div id="user">
-				<form id="login-form" name="loginform" method="post" action="${pageContext.servletContext.contextPath }/user/login">
+				<form id="login-form" name="loginform" method="post" action="${pageContext.servletContext.contextPath }/user/auth">
 					<%-- <c:set var="url" value="${pageContext.servletContext.contextPath }/user/login" />
 					<input type="hidden" name="url" value="${url }"> --%>
 					<label class="block-label" for="email">이메일</label>

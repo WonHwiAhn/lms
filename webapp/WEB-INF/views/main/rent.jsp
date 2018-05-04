@@ -11,17 +11,17 @@
 </head>
 <body>
 	<div id="container">
-		<c:import url="/WEB-INF/views/include/header.jsp" />
+		<c:import url="/WEB-INF/views/includes/header_jstl.jsp" />
 		<div id="content">
 			<div id="rent-result">
 				<p class="success">
 					정상적으로 대여(예약)이 되었습니다.
 					<br><br>
-					<a href="${pageContext.servletContext.contextPath }">목록으로 돌아가기</a>
+					<a href="${pageContext.servletContext.contextPath }/${nowPage}">목록으로 돌아가기</a>
 				</p>				
 			</div>
 		</div>
-		<c:import url="/WEB-INF/views/include/footer.jsp" />
+		<c:import url="/WEB-INF/views/includes/footer.jsp" />
 	</div>
 </body>
 </html>
